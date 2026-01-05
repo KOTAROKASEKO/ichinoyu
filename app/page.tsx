@@ -18,36 +18,39 @@ type Message = {
   sender: "user" | "ai";
 };
 
+// 1. ウェルカムメッセージの定数を定義
+const WELCOME_MESSAGE: Message = {
+  id: "welcome-message",
+  text: "一乃湯にようこそ。なんでもお聞きください。",
+  sender: "ai",
+};
+
 export default function AIChatPage() {
   const [chatId, setChatId] = useState<string | null>(null);
   const [messages, setMessages] = useState<Message[]>([]);
   const [input, setInput] = useState("");
   const [isSending, setIsSending] = useState(false);
-  const [isComposing, setIsComposing] = useState(false); // IME conversion state
+  const [isComposing, setIsComposing] = useState(false);
   const messagesEndRef = useRef<HTMLDivElement>(null);
 
-  // 2. Generate ID only if one doesn't exist in localStorage
   useEffect(() => {
-    // Try to get existing chat ID from local storage
     const storedChatId = localStorage.getItem("chatId");
     
     if (storedChatId) {
       setChatId(storedChatId);
     } else {
-      // Create new ID and save it
       const newChatId = `chat-${Date.now()}-${Math.random().toString(36).substr(2, 9)}`;
       localStorage.setItem("chatId", newChatId);
       setChatId(newChatId);
     }
   }, []);
 
-  // 3. Subscription starts once chatId is set
   useEffect(() => {
     if (!chatId) return;
 
     const q = query(
       collection(db, "chats", chatId, "messages"),
-      orderBy("createdAt", "asc") // Ensure explicit ascending order
+      orderBy("createdAt", "asc")
     );
 
     const unsub = onSnapshot(q, (snapshot) => {
@@ -115,7 +118,8 @@ export default function AIChatPage() {
 
         {/* Message List */}
         <div className="flex-1 overflow-y-auto p-4 space-y-4 bg-gray-50/50">
-          {messages.map((m) => {
+          {/* 2. ここで WELCOME_MESSAGE を先頭に追加してマップする */}
+          {[WELCOME_MESSAGE, ...messages].map((m) => {
             const isAi = m.sender === "ai";
             return (
               <div key={m.id} className={`flex w-full ${isAi ? "justify-start" : "justify-end"}`}>
