@@ -1,4 +1,4 @@
-import { initializeApp } from "firebase/app";
+import { initializeApp, getApps, getApp } from "firebase/app";
 import { getFirestore } from "firebase/firestore";
 
 const firebaseConfig = {
@@ -7,5 +7,7 @@ const firebaseConfig = {
   projectId: "ichinoyu",
 };
 
-const app = initializeApp(firebaseConfig);
-export const db = getFirestore(app);
+const app = getApps().length > 0 ? getApp() : initializeApp(firebaseConfig);
+const db = getFirestore(app);
+
+export { db };
