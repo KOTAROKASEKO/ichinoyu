@@ -21,7 +21,7 @@ type Message = {
 // 1. ウェルカムメッセージの定数を定義
 const WELCOME_MESSAGE: Message = {
   id: "welcome-message",
-  text: "一乃湯にようこそ。なんでもお聞きください。",
+  text: "一乃湯にようこそいらっしゃいました。なんでもお聞きください。warm welcome to Ichinoyu. Feel free to ask me anything, in any language",
   sender: "ai",
 };
 
